@@ -1,0 +1,16 @@
+h1 {
+	font-size: 2.5em;
+	/*text-align: center;*/
+}
+
+li {
+	font-size: 1.2em;
+}
+
+.no-display {
+	display: none;
+}
+
+#container {
+	display: flex;
+}

@@ -1,2 +1,0 @@
-# ClickyKitties
-Cat clicker exercise.

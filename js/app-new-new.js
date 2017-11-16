@@ -35,6 +35,10 @@ $(function() {
 			self.counter = 0;
 			self.imgSrc = imgSrc;
 			self.listItem = '';
+			self.catDisplayDiv = '';
+
+			//Would prefer this to be on the prototype
+			// self.listItem.click(octopus.updateCatDisplay(e));
 		},
 
 		// CatModel.prototype.clickyKitty: function() {
@@ -54,6 +58,7 @@ $(function() {
 		init: function () {
 			model.init();
 			catListView.init();
+			catDisplayView.init();
 		},
 
 		getAllKitties: function () {
@@ -62,8 +67,15 @@ $(function() {
 
 		updateCatListItem: function (data, li) {
 			data.listItem = li;
-		}
+		},
 
+		updateCatDisplayDiv: function (data, div) {
+			data.catDisplayDiv = div;
+		},
+
+		// updateCatDisplay: function(e) {
+		// 	//show cat that was clicked
+		// }
 
 	};
 
@@ -78,6 +90,22 @@ $(function() {
 				htmlStr = '<li>' + data.name + '</li>';
 				$('#cat-list').append(htmlStr);
 				octopus.updateCatListItem(data, htmlStr);
+			});
+		}
+	};
+
+	var catDisplayView = {
+		init: function () {
+			this.render();
+		},
+
+		render: function() {
+			var htmlStr = '';
+			octopus.getAllKitties().forEach(function(data) {
+				htmlStr = '<div class="kitty"><h1>' + data.name + '</h1><figure><img src="' + data.imgSrc + '"><figcaption></figcaption></figure></div>';
+				$('#cat-display').append(htmlStr);
+				$('.kitty').hide();
+				octopus.updateCatDisplayDiv(data, htmlStr);
 			});
 		}
 	};

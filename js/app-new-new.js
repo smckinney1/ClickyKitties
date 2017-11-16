@@ -1,5 +1,9 @@
 $(function() {
 	var model = {
+		init: function () {
+			this.generateCats();
+		},
+
 		catCollection: [
 			{
 				"name": "Wepsi",
@@ -33,9 +37,9 @@ $(function() {
 			self.listItem = '';
 		},
 
-/*		CatModel.prototype.clickyKitty: function() {
-			this.counter++;
-		},*/
+		// CatModel.prototype.clickyKitty: function() {
+		// 	this.counter++;
+		// },
 
 		generateCats: function() {
 			model.catCollection.forEach(function(data) {
@@ -48,7 +52,8 @@ $(function() {
 
 	var octopus = {
 		init: function () {
-			//do something
+			model.init();
+			catListView.init();
 		},
 
 		getAllKitties: function () {
@@ -64,7 +69,7 @@ $(function() {
 
 	var catListView = {
 		init: function () {
-			//do something
+			this.render();
 		},
 
 		render: function() {
@@ -77,7 +82,6 @@ $(function() {
 		}
 	};
 
-	model.generateCats();
-	catListView.render();
+	octopus.init();
 
 });

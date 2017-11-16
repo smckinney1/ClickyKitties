@@ -1,14 +1,24 @@
 const CAT_IMAGES = ['img/catphoto.jpg', 'img/catphoto2.jpg', 'img/catphoto3.jpg', 'img/catphoto4.jpg', 'img/catphoto5.jpg'];
 const CAT_NAMES = ['Wepsi', 'Cuddles', 'Kitty', 'Pepsi', 'CutiePie'];
 
+function CatMaster() {
+	this.hideCats = function () {
+		$('img').hide();
+	}
+}
+
 function Cat (name, imgSrc) {
+	//model
 	let self = this;
 	self.counter = 0;
 	self.name = name;
-	self.listItem = $('<li>' + self.name + '</li>');
 	self.imgSrc = imgSrc;
+
+	//view
+	self.listItem = $('<li>' + self.name + '</li>');
 	self.imgTag = $('<img class="' + self.name + '" src="' + imgSrc + '">')
 
+	//controller
 	self.listItem.on('click', function(e) {
 		$('img').hide();
 		$('.' + self.name).show();
@@ -24,6 +34,8 @@ function Cat (name, imgSrc) {
 		$('.' + this.name).hide();
 	}
 }
+
+Cat.prototype.showCatData
 
 //generate cats
 (function() {

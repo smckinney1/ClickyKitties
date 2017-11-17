@@ -34,10 +34,9 @@ $(function() {
 			self.name = name;
 			self.counter = 0;
 			self.imgSrc = imgSrc;
-			self.listItem = '';
-			self.catDisplayDiv = '';
 
 			//Would prefer this to be on the prototype
+			//TODO: Get this out of the model
 			// self.listItem.click(octopus.updateCatDisplay(e));
 		},
 
@@ -67,15 +66,21 @@ $(function() {
 
 		updateCatListItem: function (data, li) {
 			data.listItem = li;
+			data.listItem.click(function(e) { 
+				console.log('list!');
+			});
 		},
 
 		updateCatDisplayDiv: function (data, div) {
 			data.catDisplayDiv = div;
+			data.catDisplayDiv.click(function(e) {
+				console.log('display!!');
+			});
 		},
 
-		// updateCatDisplay: function(e) {
-		// 	//show cat that was clicked
-		// }
+		updateCatDisplay: function(e) {
+			console.log(e);
+		}
 
 	};
 
@@ -87,7 +92,7 @@ $(function() {
 		render: function() {
 			var htmlStr = '';
 			octopus.getAllKitties().forEach(function(data) {
-				htmlStr = '<li>' + data.name + '</li>';
+				htmlStr = $('<li>' + data.name + '</li>');
 				$('#cat-list').append(htmlStr);
 				octopus.updateCatListItem(data, htmlStr);
 			});
@@ -102,7 +107,7 @@ $(function() {
 		render: function() {
 			var htmlStr = '';
 			octopus.getAllKitties().forEach(function(data) {
-				htmlStr = '<div class="kitty"><h1>' + data.name + '</h1><figure><img src="' + data.imgSrc + '"><figcaption></figcaption></figure></div>';
+				htmlStr = $('<div class="kitty"><h1>' + data.name + '</h1><figure><img src="' + data.imgSrc + '"><figcaption></figcaption></figure></div>');
 				$('#cat-display').append(htmlStr);
 				$('.kitty').hide();
 				octopus.updateCatDisplayDiv(data, htmlStr);

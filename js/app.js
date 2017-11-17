@@ -1,75 +1,132 @@
-const CAT_IMAGES = ['img/catphoto.jpg', 'img/catphoto2.jpg', 'img/catphoto3.jpg', 'img/catphoto4.jpg', 'img/catphoto5.jpg'];
-const CAT_NAMES = ['Wepsi', 'Cuddles', 'Kitty', 'Pepsi', 'CutiePie'];
+$(function() {
+	var model = {
+		init: function () {
+			this.generateCats();
+			this.modifyCatPrototype();
+		},
 
-function CatMaster() {
-	this.hideCats = function () {
-		$('img').hide();
-	}
-}
+		catCollection: [
+			{
+				"name": "Wepsi",
+				"imgSrc": "img/catphoto.jpg"
+			},
+			{
+				"name": "Cuddles",
+				"imgSrc": "img/catphoto2.jpg"
+			},
+			{
+				"name": "Kitty",
+				"imgSrc": "img/catphoto3.jpg"
+			},
+			{
+				"name": "Pepsi",
+				"imgSrc": "img/catphoto4.jpg"
+			},
+			{
+				"name": "CutiePie",
+				"imgSrc": "img/catphoto5.jpg"
+			}
+		],
 
-function Cat (name, imgSrc) {
-	//model
-	let self = this;
-	self.counter = 0;
-	self.name = name;
-	self.imgSrc = imgSrc;
+		kittyObjects: [],
 
-	//view
-	self.listItem = $('<li>' + self.name + '</li>');
-	self.imgTag = $('<img class="' + self.name + '" src="' + imgSrc + '">')
+		CatModel: function(name, imgSrc) {
+			let self = this;
+			self.name = name;
+			self.counter = 0;
+			self.imgSrc = imgSrc;
+		},
 
-	//controller
-	self.listItem.on('click', function(e) {
-		$('img').hide();
-		$('.' + self.name).show();
-		
-	});
+		modifyCatPrototype: function() {
+			this.CatModel.prototype.clickyKitty = function() {
+				this.counter++;
+				octopus.updateCatDisplayDiv(this);
+			}
+		},
 
-	self.imgTag.on('click', function() {
-		self.counter++;
-		console.log(self.name + ' clicks: ' + self.counter);
-	});
+		generateCats: function() {
+			model.catCollection.forEach(function(data) {
+				var kitty = new model.CatModel(data.name, data.imgSrc);
+				model.kittyObjects.push(kitty);
+			});
+		}
 
-	self.hideCat = function() {
-		$('.' + this.name).hide();
-	}
-}
+	};
 
-Cat.prototype.showCatData
+	var octopus = {
+		init: function () {
+			model.init();
+			catListView.init();
+			catDisplayView.init();
+		},
 
-//generate cats
-(function() {
-	for (let i = 0; i < CAT_IMAGES.length; i++) {
-		let cat = new Cat(CAT_NAMES[i], CAT_IMAGES[i]);
-		$('#cat-list').append(cat.listItem);
-		$('#cat-display').append(cat.imgTag);
-		cat.hideCat();
-	}
-}());
+		getAllKitties: function () {
+			return model.kittyObjects;
+		},
 
+		updateCatListItem: function (data, li) {
+			data.listItem = li;
+			data.listItem.click(function(e) { 
+				catDisplayView.displayCatDiv(data);
+			});
+		},
 
+		updateCatDisplayData: function (data, div) {
+			data.catDisplayDiv = div;
+			data.catDisplayDiv.click(function(e) {
+				data.clickyKitty();
+			});
+		},
 
-//function for cat to hide itself so that another entity can tell it what to do?
+		updateCatDisplayDiv: function(data) {
+			catDisplayView.updateCatCounter(data);
+		}
+	};
 
-//Cat collection to hold instances of the cats and can tell all the cats to hide itself
+	var catListView = {
+		init: function () {
+			this.render();
+		},
 
+		render: function() {
+			var htmlStr = '';
+			octopus.getAllKitties().forEach(function(data) {
+				htmlStr = $('<li>' + data.name + '</li>');
+				$('#cat-list').append(htmlStr);
+				octopus.updateCatListItem(data, htmlStr);
+			});
+		}
+	};
 
+	var catDisplayView = {
+		init: function () {
+			this.render();
+		},
 
+		render: function() {
+			var htmlStr = '';
+			octopus.getAllKitties().forEach(function(data) {
+				htmlStr = $('<div class="kitty"><h1>' + data.name + '</h1><figure><img src="' + data.imgSrc + '"><figcaption>Click Count: <span>0</span></figcaption></figure></div>');
+				$('#cat-display').append(htmlStr);
+				octopus.updateCatDisplayData(data, htmlStr);
+				catDisplayView.hideKittyDivs();
+			});
+		},
 
+		hideKittyDivs: function() {
+			$('.kitty').hide();
+		},
 
+		displayCatDiv: function(data) {
+			catDisplayView.hideKittyDivs();
+			data.catDisplayDiv.show();
+		},
 
+		updateCatCounter: function(data) {
+			data.catDisplayDiv.find('span').text(data.counter);
+		}
+	};
 
+	octopus.init();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+});

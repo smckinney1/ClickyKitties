@@ -7,10 +7,6 @@ li {
 	font-size: 1.2em;
 }
 
-.no-display {
+.hidden {
 	display: none;
-}
-
-#container {
-	display: flex;
 }

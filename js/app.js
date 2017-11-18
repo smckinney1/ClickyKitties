@@ -5,6 +5,7 @@ $(function() {
 			this.modifyCatPrototype();
 		},
 
+		//Simulating a data request
 		catCollection: [
 			{
 				"name": "Wepsi",
@@ -28,6 +29,7 @@ $(function() {
 			}
 		],
 
+		//Used to store the cat objects created from CatModel class
 		kittyObjects: [],
 
 		CatModel: function(name, imgSrc) {
@@ -37,6 +39,7 @@ $(function() {
 			self.imgSrc = imgSrc;
 		},
 
+		//Add click handler to prototype of CatModel, which increases the click counter on that cat's display
 		modifyCatPrototype: function() {
 			this.CatModel.prototype.clickyKitty = function() {
 				this.counter++;
@@ -44,6 +47,7 @@ $(function() {
 			}
 		},
 
+		//Generates the cats from CatModel class and pushes them to kittyObjects array to be used later
 		generateCats: function() {
 			model.catCollection.forEach(function(data) {
 				var kitty = new model.CatModel(data.name, data.imgSrc);
@@ -60,10 +64,12 @@ $(function() {
 			catDisplayView.init();
 		},
 
+		//Allows us to loop over all of the cat objects
 		getAllKitties: function () {
 			return model.kittyObjects;
 		},
 
+		//Add the list item to the cat object and add click handler to the list item
 		updateCatListItem: function (data, li) {
 			data.listItem = li;
 			data.listItem.click(function(e) { 
@@ -71,6 +77,7 @@ $(function() {
 			});
 		},
 
+		//Add display div to cat object and attach click handler
 		updateCatDisplayData: function (data, div) {
 			data.catDisplayDiv = div;
 			data.catDisplayDiv.click(function(e) {
@@ -78,6 +85,7 @@ $(function() {
 			});
 		},
 
+		//Update counter in the display
 		updateCatDisplayDiv: function(data) {
 			catDisplayView.updateCatCounter(data);
 		}
@@ -88,6 +96,7 @@ $(function() {
 			this.render();
 		},
 
+		//Generate all of the cat list items, then update the octopus so that the model can include that list item in its object data
 		render: function() {
 			var htmlStr = '';
 			octopus.getAllKitties().forEach(function(data) {
@@ -103,6 +112,8 @@ $(function() {
 			this.render();
 		},
 
+		//Generate all of the cat display HTML, then update the octopus so that the model can include the HTML object in its object data
+		//Hide all of the generated divs upon render
 		render: function() {
 			var htmlStr = '';
 			octopus.getAllKitties().forEach(function(data) {

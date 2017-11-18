@@ -80,9 +80,17 @@ $(function() {
 		//Add display div to cat object and attach click handler
 		updateCatDisplayData: function (data, div) {
 			data.catDisplayDiv = div;
-			data.catDisplayDiv.click(function(e) {
+			data.catDisplayDiv.find('img').click(function(e) {
 				data.clickyKitty();
 			});
+
+			//Is this in the right place?
+			data.catDisplayDiv.find('button').click(function(e) {
+				$('.admin').show();
+				$('input[name="cat-name"]').val(data.name);
+				$('input[name="cat-img"]').val(data.imgSrc);
+				$('input[name="cat-counter"]').val(data.counter);
+			})
 		},
 
 		//Update counter in the display
@@ -117,10 +125,12 @@ $(function() {
 		render: function() {
 			var htmlStr = '';
 			octopus.getAllKitties().forEach(function(data) {
-				htmlStr = $('<div class="kitty"><h1>' + data.name + '</h1><figure><img src="' + data.imgSrc + '"><figcaption>Click Count: <span>0</span></figcaption></figure></div>');
+				htmlStr = $('<div class="kitty"><h1>' + data.name + '</h1><figure><img src="' + data.imgSrc + '"><figcaption>Click Count: <span>0</span><br><button id="admin-btn">Admin</button></br></figcaption></figure></div>');
 				$('#cat-display').append(htmlStr);
 				octopus.updateCatDisplayData(data, htmlStr);
 				catDisplayView.hideKittyDivs();
+				//hide admin display area for now
+				$('.admin').hide();
 			});
 		},
 
@@ -137,6 +147,21 @@ $(function() {
 			data.catDisplayDiv.find('span').text(data.counter);
 		}
 	};
+
+	// var catAdminView = {
+
+	// 	render: function(data) {
+
+	// 		//handler has not been appropriately attached
+	// 		data.catDisplayDiv.find('button').click(function(e) {
+	// 			console.log('blah');
+	// 			//$('.admin').show();
+	// 			// $('input[name="cat-name"]').val(data.name);
+	// 			// $('input[name="cat-img"]').val(data.imgSrc);
+	// 			// $('input[name="cat-counter"]').val(data.counter);
+	// 		});
+	// 	}
+	//}
 
 	octopus.init();
 

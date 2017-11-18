@@ -73,6 +73,8 @@ $(function() {
 		updateCatListItem: function (data, li) {
 			data.listItem = li;
 			data.listItem.click(function(e) {
+
+				//.hide might need to be added as a function to cat admin view
 				$('.admin').hide(); 
 				catDisplayView.displayCatDiv(data);
 			});
@@ -91,7 +93,16 @@ $(function() {
 				$('input[name="cat-name"]').val(data.name);
 				$('input[name="cat-img"]').val(data.imgSrc);
 				$('input[name="cat-counter"]').val(data.counter);
-			})
+			});
+
+			//definitely not the right place - get this out once working
+			$('.admin').click(function(e) {
+				data.name = $('input[name="cat-name"]').val();
+				data.imgSrc = $('input[name="cat-img"]').val();
+				data.counter = $('input[name="cat-counter"]').val();
+				//need to do this for the image nad name too
+				catDisplayView.updateCatCounter(data);
+			});
 		},
 
 		//Update counter in the display

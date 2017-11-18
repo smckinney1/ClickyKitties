@@ -72,7 +72,8 @@ $(function() {
 		//Add the list item to the cat object and add click handler to the list item
 		updateCatListItem: function (data, li) {
 			data.listItem = li;
-			data.listItem.click(function(e) { 
+			data.listItem.click(function(e) {
+				$('.admin').hide(); 
 				catDisplayView.displayCatDiv(data);
 			});
 		},

@@ -73,9 +73,7 @@ $(function() {
 		updateCatListItem: function (data, li) {
 			data.listItem = li;
 			data.listItem.click(function(e) {
-
-				//.hide might need to be added as a function to cat admin view
-				$('.admin').hide(); 
+				catAdminView.hideView();
 				catDisplayView.displayCatDiv(data);
 			});
 		},
@@ -87,21 +85,10 @@ $(function() {
 				data.clickyKitty();
 			});
 
-			//Is this in the right place?
-			data.catDisplayDiv.find('button').click(function(e) {
-				$('.admin').show();
-				$('input[name="cat-name"]').val(data.name);
-				$('input[name="cat-img"]').val(data.imgSrc);
-				$('input[name="cat-counter"]').val(data.counter);
-			});
-
-			//definitely not the right place - get this out once working
-			$('.admin').click(function(e) {
-				data.name = $('input[name="cat-name"]').val();
-				data.imgSrc = $('input[name="cat-img"]').val();
-				data.counter = $('input[name="cat-counter"]').val();
-				//need to do this for the image nad name too
-				catDisplayView.updateCatCounter(data);
+			//Add click handler to catDisplayDiv admin button
+			data.catDisplayDiv.find('#admin-btn').click(function(e) {
+				catAdminView.showView(data);
+				catAdminView.render(data);
 			});
 		},
 
@@ -160,20 +147,29 @@ $(function() {
 		}
 	};
 
-	// var catAdminView = {
-
-	// 	render: function(data) {
-
-	// 		//handler has not been appropriately attached
-	// 		data.catDisplayDiv.find('button').click(function(e) {
-	// 			console.log('blah');
-	// 			//$('.admin').show();
-	// 			// $('input[name="cat-name"]').val(data.name);
-	// 			// $('input[name="cat-img"]').val(data.imgSrc);
-	// 			// $('input[name="cat-counter"]').val(data.counter);
-	// 		});
-	// 	}
-	//}
+	//TODO: Render this in the correct area of code.
+	var catAdminView = {
+		render: function (data) {
+			$('#btn-submit').click(function() {
+				catAdminView.submitNewCatData(data);
+			});
+		},
+		hideView: function() {
+			$('.admin').hide();
+		},
+		showView: function(data) {
+			$('.admin').show();
+			$('input[name="cat-name"]').val(data.name);
+			$('input[name="cat-img"]').val(data.imgSrc);
+			$('input[name="cat-counter"]').val(data.counter);
+		},
+		submitNewCatData: function(data) {
+			data.name = $('input[name="cat-name"]').val();
+			data.imgSrc = $('input[name="cat-img"]').val();
+			data.counter = $('input[name="cat-counter"]').val();
+			console.log(data);
+		}
+	}
 
 	octopus.init();
 

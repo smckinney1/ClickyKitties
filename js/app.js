@@ -95,7 +95,11 @@ $(function() {
 		//Update counter in the display
 		updateCatDisplayDiv: function(data) {
 			catDisplayView.updateCatCounter(data);
-		}
+		},
+
+/*		renderNewCatDataInInterface: function(data) {
+			//Keep??
+		} */
 	};
 
 	var catListView = {
@@ -111,6 +115,10 @@ $(function() {
 				$('#cat-list').append(htmlStr);
 				octopus.updateCatListItem(data, htmlStr);
 			});
+		},
+
+		replaceCatNameInList: function(data, oldName) {
+			$('li:contains("' + oldName + '")').replaceWith(data.listItem);
 		}
 	};
 
@@ -124,10 +132,11 @@ $(function() {
 		render: function() {
 			var htmlStr = '';
 			octopus.getAllKitties().forEach(function(data) {
-				htmlStr = $('<div class="kitty"><h1>' + data.name + '</h1><figure><img src="' + data.imgSrc + '"><figcaption>Click Count: <span>0</span><br><button id="admin-btn">Admin</button></br></figcaption></figure></div>');
+				htmlStr = $('<div class="kitty"><h1>' + data.name + '</h1><figure><img src="' + data.imgSrc + '"><figcaption>Click Count: <span>' + data.counter + '</span><br><button id="admin-btn">Admin</button></br></figcaption></figure></div>');
 				$('#cat-display').append(htmlStr);
 				octopus.updateCatDisplayData(data, htmlStr);
 				catDisplayView.hideKittyDivs();
+
 				//hide admin display area for now
 				$('.admin').hide();
 			});
@@ -144,14 +153,22 @@ $(function() {
 
 		updateCatCounter: function(data) {
 			data.catDisplayDiv.find('span').text(data.counter);
+		},
+
+		//TODO: probably don't need all of these function parameters
+		replaceCatDisplayWithNewData: function(data, oldName) {
+			//data.catDisplayDiv = $('<div class="kitty"><h1>' + data.name + '</h1><figure><img src="' + data.imgSrc + '"><figcaption>Click Count: <span>0</span><br><button id="admin-btn">Admin</button></br></figcaption></figure></div>');
+			//$('div:contains("' + oldName + '")').replaceWith(data.catDisplayDiv);
 		}
 	};
 
-	//TODO: Render this in the correct area of code.
 	var catAdminView = {
 		render: function (data) {
 			$('#btn-submit').click(function() {
+				//TODO: This is breaking the cat data!!!
 				catAdminView.submitNewCatData(data);
+				catAdminView.hideView();
+				$('#btn-submit').off();
 			});
 		},
 		hideView: function() {
@@ -164,10 +181,15 @@ $(function() {
 			$('input[name="cat-counter"]').val(data.counter);
 		},
 		submitNewCatData: function(data) {
+			//TODO: This is breaking the cat data!!!
+			//var oldName = data.name;
 			data.name = $('input[name="cat-name"]').val();
 			data.imgSrc = $('input[name="cat-img"]').val();
 			data.counter = $('input[name="cat-counter"]').val();
+			//data.listItem = $('<li>' + data.name + '</li>');
 			console.log(data);
+			//catListView.replaceCatNameInList(data, oldName);
+			//catDisplayView.replaceCatDisplayWithNewData(data, oldName);*/
 		}
 	}
 

@@ -185,7 +185,7 @@ $(function() {
 			data.name = $('input[name="cat-name"]').val();
 			data.imgSrc = $('input[name="cat-img"]').val();
 			data.counter = $('input[name="cat-counter"]').val();
-			//data.listItem = $('<li>' + data.name + '</li>');
+			data.listItem.text(data.name);
 			console.log(model.kittyObjects);
 			//catListView.replaceCatNameInList(data, oldName);
 			//catDisplayView.replaceCatDisplayWithNewData(data, oldName);*/

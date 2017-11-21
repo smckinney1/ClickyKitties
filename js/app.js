@@ -165,7 +165,6 @@ $(function() {
 	var catAdminView = {
 		render: function (data) {
 			$('#btn-submit').click(function() {
-				//TODO: This is breaking the cat data!!!
 				catAdminView.submitNewCatData(data);
 				catAdminView.hideView();
 				$('#btn-submit').off();
@@ -187,7 +186,7 @@ $(function() {
 			data.imgSrc = $('input[name="cat-img"]').val();
 			data.counter = $('input[name="cat-counter"]').val();
 			//data.listItem = $('<li>' + data.name + '</li>');
-			console.log(data);
+			console.log(model.kittyObjects);
 			//catListView.replaceCatNameInList(data, oldName);
 			//catDisplayView.replaceCatDisplayWithNewData(data, oldName);*/
 		}

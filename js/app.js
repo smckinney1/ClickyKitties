@@ -49,8 +49,8 @@ $(function() {
 
 		//Generates the cats from CatModel class and pushes them to kittyObjects array to be used later
 		generateCats: function() {
-			model.catCollection.forEach(function(data) {
-				var kitty = new model.CatModel(data.name, data.imgSrc);
+			model.catCollection.forEach(function(cat) {
+				var kitty = new model.CatModel(cat.name, cat.imgSrc);
 				model.kittyObjects.push(kitty);
 			});
 		}
@@ -70,36 +70,32 @@ $(function() {
 		},
 
 		//Add the list item to the cat object and add click handler to the list item
-		updateCatListItem: function (data, li) {
-			data.listItem = li;
-			data.listItem.click(function(e) {
+		updateCatListItem: function (cat, li) {
+			cat.listItem = li;
+			cat.listItem.click(function(e) {
 				catAdminView.hideView();
-				catDisplayView.displayCatDiv(data);
+				catDisplayView.displayCatDiv(cat);
 			});
 		},
 
 		//Add display div to cat object and attach click handler
-		updateCatDisplayData: function (data, div) {
-			data.catDisplayDiv = div;
-			data.catDisplayDiv.find('img').click(function(e) {
-				data.clickyKitty();
+		updateCatDisplayData: function (cat, div) {
+			cat.catDisplayDiv = div;
+			cat.catDisplayDiv.find('img').click(function(e) {
+				cat.clickyKitty();
 			});
 
 			//Add click handler to catDisplayDiv admin button
-			data.catDisplayDiv.find('#admin-btn').click(function(e) {
-				catAdminView.showView(data);
-				catAdminView.render(data);
+			cat.catDisplayDiv.find('#admin-btn').click(function(e) {
+				catAdminView.showView(cat);
+				catAdminView.render(cat);
 			});
 		},
 
 		//Update counter in the display
-		updateCatDisplayDiv: function(data) {
-			catDisplayView.updateCatCounter(data);
-		},
-
-/*		renderNewCatDataInInterface: function(data) {
-			//Keep??
-		} */
+		updateCatDisplayDiv: function(cat) {
+			catDisplayView.updateCatCounter(cat);
+		}
 	};
 
 	var catListView = {
@@ -110,15 +106,15 @@ $(function() {
 		//Generate all of the cat list items, then update the octopus so that the model can include that list item in its object data
 		render: function() {
 			var htmlStr = '';
-			octopus.getAllKitties().forEach(function(data) {
-				htmlStr = $('<li>' + data.name + '</li>');
+			octopus.getAllKitties().forEach(function(cat) {
+				htmlStr = $('<li>' + cat.name + '</li>');
 				$('#cat-list').append(htmlStr);
-				octopus.updateCatListItem(data, htmlStr);
+				octopus.updateCatListItem(cat, htmlStr);
 			});
 		},
 
-		replaceCatNameInList: function(data, oldName) {
-			$('li:contains("' + oldName + '")').replaceWith(data.listItem);
+		replaceCatNameInList: function(cat) {
+			cat.listItem.text(cat.name);
 		}
 	};
 
@@ -127,14 +123,14 @@ $(function() {
 			this.render();
 		},
 
-		//Generate all of the cat display HTML, then update the octopus so that the model can include the HTML object in its object data
+		//Generate all of the cat display HTML, then update the octopus so that the model can include the HTML object in its object cat
 		//Hide all of the generated divs upon render
 		render: function() {
 			var htmlStr = '';
-			octopus.getAllKitties().forEach(function(data) {
-				htmlStr = $('<div class="kitty"><h1>' + data.name + '</h1><figure><img src="' + data.imgSrc + '"><figcaption>Click Count: <span>' + data.counter + '</span><br><button id="admin-btn">Admin</button></br></figcaption></figure></div>');
+			octopus.getAllKitties().forEach(function(cat) {
+				htmlStr = $('<div class="kitty"><h1>' + cat.name + '</h1><figure><img src="' + cat.imgSrc + '"><figcaption>Click Count: <span>' + cat.counter + '</span><br><button id="admin-btn">Admin</button></br></figcaption></figure></div>');
 				$('#cat-display').append(htmlStr);
-				octopus.updateCatDisplayData(data, htmlStr);
+				octopus.updateCatDisplayData(cat, htmlStr);
 				catDisplayView.hideKittyDivs();
 
 				//hide admin display area for now
@@ -146,26 +142,27 @@ $(function() {
 			$('.kitty').hide();
 		},
 
-		displayCatDiv: function(data) {
+		displayCatDiv: function(cat) {
 			catDisplayView.hideKittyDivs();
-			data.catDisplayDiv.show();
+			cat.catDisplayDiv.show();
 		},
 
-		updateCatCounter: function(data) {
-			data.catDisplayDiv.find('span').text(data.counter);
+		updateCatCounter: function(cat) {
+			cat.catDisplayDiv.find('span').text(cat.counter);
 		},
 
-		//TODO: probably don't need all of these function parameters
-		replaceCatDisplayWithNewData: function(data, oldName) {
-			//data.catDisplayDiv = $('<div class="kitty"><h1>' + data.name + '</h1><figure><img src="' + data.imgSrc + '"><figcaption>Click Count: <span>0</span><br><button id="admin-btn">Admin</button></br></figcaption></figure></div>');
-			//$('div:contains("' + oldName + '")').replaceWith(data.catDisplayDiv);
+		renderNewCatDisplayData: function(cat) {
+			cat.catDisplayDiv.find('h1').text(cat.name);
+			cat.catDisplayDiv.find('span').text(cat.counter);
+			cat.catDisplayDiv.find('img').attr('src', cat.imgSrc);
+
 		}
 	};
 
 	var catAdminView = {
-		render: function (data) {
+		render: function (cat) {
 			$('#btn-submit').click(function() {
-				catAdminView.submitNewCatData(data);
+				catAdminView.submitNewCatData(cat);
 				catAdminView.hideView();
 				$('#btn-submit').off();
 			});
@@ -173,22 +170,18 @@ $(function() {
 		hideView: function() {
 			$('.admin').hide();
 		},
-		showView: function(data) {
+		showView: function(cat) {
 			$('.admin').show();
-			$('input[name="cat-name"]').val(data.name);
-			$('input[name="cat-img"]').val(data.imgSrc);
-			$('input[name="cat-counter"]').val(data.counter);
+			$('input[name="cat-name"]').val(cat.name);
+			$('input[name="cat-img"]').val(cat.imgSrc);
+			$('input[name="cat-counter"]').val(cat.counter);
 		},
-		submitNewCatData: function(data) {
-			//TODO: This is breaking the cat data!!!
-			//var oldName = data.name;
-			data.name = $('input[name="cat-name"]').val();
-			data.imgSrc = $('input[name="cat-img"]').val();
-			data.counter = $('input[name="cat-counter"]').val();
-			data.listItem.text(data.name);
-			console.log(model.kittyObjects);
-			//catListView.replaceCatNameInList(data, oldName);
-			//catDisplayView.replaceCatDisplayWithNewData(data, oldName);*/
+		submitNewCatData: function(cat) {
+			cat.name = $('input[name="cat-name"]').val();
+			cat.imgSrc = $('input[name="cat-img"]').val();
+			cat.counter = $('input[name="cat-counter"]').val();
+			catListView.replaceCatNameInList(cat);
+			catDisplayView.renderNewCatDisplayData(cat);
 		}
 	}
 
